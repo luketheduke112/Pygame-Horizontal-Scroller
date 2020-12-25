@@ -5,7 +5,7 @@
 #	- add powerups
 #	- Add score counter | including a high score tracker 
 #	- package up and deliever
-#
+#	-change obstacle generation, use a loop instead of just copy pasting.
 #
 import pygame
 import random
