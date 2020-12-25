@@ -12,10 +12,11 @@ import random
 pygame.init()
 running = True
 clock = pygame.time.Clock()
-screenWidth = 1920
-screenHeight = 1080
+screenWidth = 1720
+screenHeight = 900
 screen = pygame.display.set_mode([screenWidth,screenHeight])
 obstaclesAreFalling = True
+difficultySetting = 2 # 0 = Easy |1 = Normal |2 = Hard
 
 class Player:
 	"""docstring for Player"""
@@ -57,20 +58,19 @@ class Obstacle():
 		pygame.draw.rect(screen,self.color,self.rect)
 
 #repetitive as hek. Need to just make this a loop. Was testing so just kinda got carried away with ctrl + c and ctrl + v
-obstaclesArray = [
-	Obstacle(pygame.Rect(230,screenHeight,50,50), pygame.Color(234,34,64), random.randint(4,15)),
-	Obstacle(pygame.Rect(430,screenHeight,50,20), pygame.Color(23,52,47), random.randint(4,15)),
-	Obstacle(pygame.Rect(20,screenHeight,80,50), pygame.Color(143,64,120), random.randint(4,15)),
-	Obstacle(pygame.Rect(130,screenHeight,50,50), pygame.Color(234,34,64), random.randint(4,15)),
-	Obstacle(pygame.Rect(630,screenHeight,35,40), pygame.Color(23,52,47), random.randint(4,15)),
-	Obstacle(pygame.Rect(500,screenHeight,20,60), pygame.Color(143,64,120), random.randint(4,15)),
-	Obstacle(pygame.Rect(230,screenHeight,50,50), pygame.Color(234,34,64), random.randint(4,15)),
-	Obstacle(pygame.Rect(430,screenHeight,50,20), pygame.Color(23,52,47), random.randint(4,15)),
-	Obstacle(pygame.Rect(20,screenHeight,80,50), pygame.Color(143,64,120), random.randint(4,15)),
-	Obstacle(pygame.Rect(130,screenHeight,50,50), pygame.Color(234,34,64), random.randint(4,15)),
-	Obstacle(pygame.Rect(630,screenHeight,35,40), pygame.Color(23,52,47), random.randint(4,15)),
-	Obstacle(pygame.Rect(500,screenHeight,20,60), pygame.Color(143,64,120), random.randint(4,15)),
-]
+obstaclesArray = []
+
+#handle difficulty
+difficultyValue = 0
+if difficultySetting == 0:
+	difficultyValue = 11
+elif difficultySetting == 1:
+	difficultyValue = 15
+elif difficultySetting == 2:
+	difficultyValue = 20
+
+for obstacle in range(0,difficultyValue):
+	obstaclesArray.append(Obstacle(pygame.Rect(random.randint(0,screenWidth),screenHeight,random.randint(10,100),random.randint(10,200)), pygame.Color(0,0,0), random.randint(4,15)))
 def controlObstacles(isFalling = True):
 	for obstacle in obstaclesArray:
 		obstacle.draw()
