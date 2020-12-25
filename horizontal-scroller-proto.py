@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 screenWidth = 1920
 screenHeight = 1080
 screen = pygame.display.set_mode([screenWidth,screenHeight])
+obstaclesAreFalling = True
 
 class Player:
 	"""docstring for Player"""
@@ -70,6 +71,21 @@ obstaclesArray = [
 	Obstacle(pygame.Rect(630,screenHeight,35,40), pygame.Color(23,52,47), random.randint(4,15)),
 	Obstacle(pygame.Rect(500,screenHeight,20,60), pygame.Color(143,64,120), random.randint(4,15)),
 ]
+def controlObstacles(isFalling = True):
+	for obstacle in obstaclesArray:
+		obstacle.draw()
+		if isFalling:
+			obstacle.rect.move_ip(0,obstacle.speed)
+		else:
+			obstacle.rect.move_ip(0,0)
+		if(obstacle.rect.y > screenHeight):
+			obstacle.rect.y = 0-(random.randint(obstacle.rect.height,1000))
+			obstacle.rect.x = random.randint(0 + obstacle.rect.width,screenWidth)
+		if(MainCharacter.rect.colliderect(obstacle.rect)):
+			print("collision")
+			MainCharacter.isAlive = False
+score = 0
+font = pygame.font.Font("freesansbold.ttf", 32)
 
 
 while running:
@@ -78,21 +94,23 @@ while running:
 		if event.type == pygame.QUIT:
 			running = False
 	screen.fill((255,255,255))
-	
-	for obstacle in obstaclesArray:
-		obstacle.draw()
-		obstacle.rect.move_ip(0,obstacle.speed)
-		if(obstacle.rect.y > screenHeight):
-			obstacle.rect.y = 0-(random.randint(obstacle.rect.height,1000))
-			obstacle.rect.x = random.randint(0 + obstacle.rect.width,screenWidth)
-		if(MainCharacter.rect.colliderect(obstacle.rect)):
-			print("collision")
-			MainCharacter.isAlive = False
 
-	if MainCharacter.isAlive == False:
-		break #end the game and close the window when the character dies. Need to make a "You're dead" screen so they can restart play.
+	controlObstacles(obstaclesAreFalling)
+			
+	if MainCharacter.isAlive:
+		score+=0.2
+		scoreTextValue = "Score:" + str(round(score))
+		scoreText = font.render(scoreTextValue,True, (0,0,0))
+		textRect = scoreText.get_rect()
+		screen.blit(scoreText,textRect)
+	else:
+		obstaclesAreFalling = False
+		score+=0
+		scoreTextValue = "GAME OVER! Your score was: " + str(round(score))
+		scoreText = font.render(scoreTextValue,True, (0,0,0))
+		textRect = scoreText.get_rect()
+		screen.blit(scoreText,textRect)
 	MainCharacter.movePlayer()
 	MainCharacter.drawPlayer()
-
 pygame.quit()
 print("You died! Sorry!") #yeesh, so harsh.
